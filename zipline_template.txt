@@ -1,0 +1,19 @@
+## Really Basic 101 of Bactesting
+
+def initialize(context):
+	context.aapl = sid(24) # Generating a context variable for stock ID = 24 which is AAPL
+	
+def handle_data(context, data):
+	hist = data.history(context.aapl, 'price', 50, '1d')
+	## Simple moving averages
+	# log.info(hist.head())
+	sma_50 = hist.mean()
+	sma_20 = hist[-20:].mean() 
+
+	if sma_20>sma_50:
+		order_target_percent(context.aapl, 1.0) # 1.0 = 100% into AAPL
+	elif sma_50>sma_20:
+		order_target_percent(context.aapl, -1.0) # shorting AAPL 100%
+
+	record(leverage = context.account.leverage) #You can track 5 
+	
